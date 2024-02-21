@@ -1,0 +1,15 @@
+version: "2.1"
+services:
+  spottube:
+    build: .
+    container_name: spottube
+    environment:
+      - spotify_client_id=abc
+      - spotify_client_secret=123
+      - thread_limit=1
+    volumes:
+      - .:/spottube/downloads
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - 5000:5000
+    restart: unless-stopped

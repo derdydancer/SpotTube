@@ -9,27 +9,25 @@
 
 Web GUI for downloading Spotify Playlists/Albums.
 
+## This is a fork
+This fork differs in that it creates a folder structure to comply with jellyfin. Just add the playlist folder to your music library on jellyfin
 
-## Run using docker-compose
+Playlist
+├── Artist 1
+│   ├── Album A
+│   │   ├── Song 1.flac
+│   │   ├── Song 2.flac
+│   │   └── Song 3.flac
+│   └── Album B
+│       ├── Track 1.m4a
+│       ├── Track 2.m4a
+│       └── Track 3.m4a
+└── Artist 2
+    └── Album A
+        └── Song 1.flac
 
-```yaml
-version: "2.1"
-services:
-  spottube:
-    image: thewicklowwolf/spottube:latest
-    container_name: spottube
-    environment:
-      - spotify_client_id=abc
-      - spotify_client_secret=123
-      - thread_limit=1
-    volumes:
-      - /data/media/spottube:/spottube/downloads
-      - /etc/localtime:/etc/localtime:ro
-    ports:
-      - 5000:5000
-    restart: unless-stopped
-```
 
+https://jellyfin.org/docs/general/server/media/music/
 ---
 
 

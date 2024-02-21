@@ -45,7 +45,7 @@ class Data_Handler:
             track_title = track_info["name"]
             artists = [artist["name"] for artist in track_info["artists"]]
             artists_str = ", ".join(artists)
-            track_list.append({"Artist": artists_str, "Title": track_title, "Status": "Queued", "Folder": ""})
+            track_list.append({"Artist": artists_str, "Title": track_title, "Status": "Queued", "Folder": "", "Album": album_name})
 
         elif "album" in link:
             album_info = sp.album(link)
@@ -56,7 +56,7 @@ class Data_Handler:
                     track_title = item["name"]
                     artists = [artist["name"] for artist in item["artists"]]
                     artists_str = ", ".join(artists)
-                    track_list.append({"Artist": artists_str, "Title": track_title, "Status": "Queued", "Folder": album_name})
+                    track_list.append({"Artist": artists_str, "Title": track_title, "Status": "Queued", "Folder": album_name, "Album": album_name})
                 except:
                     pass
 
@@ -64,7 +64,7 @@ class Data_Handler:
             playlist = sp.playlist(link)
             playlist_name = playlist["name"]
             number_of_tracks = playlist["tracks"]["total"]
-            fields = "items.track(name,artists.name)"
+            fields = "items.track(name,artists.name,album.name)"
 
             offset = 0
             limit = 100
@@ -79,8 +79,9 @@ class Data_Handler:
                     track = item["track"]
                     track_title = track["name"]
                     artists = [artist["name"] for artist in track["artists"]]
+                    album_name = track["album"]["name"]
                     artists_str = ", ".join(artists)
-                    track_list.append({"Artist": artists_str, "Title": track_title, "Status": "Queued", "Folder": playlist_name})
+                    track_list.append({"Artist": artists_str, "Title": track_title, "Status": "Queued", "Folder": playlist_name, "Album": album_name})
                 except:
                     pass
 
@@ -91,6 +92,7 @@ class Data_Handler:
             self.ytmusic = YTMusic()
             artist = song["Artist"]
             title = song["Title"]
+            album = song["Album"]
             cleaned_artist = self.string_cleaner(artist).lower()
             cleaned_title = self.string_cleaner(title).lower()
             folder = song["Folder"]
@@ -136,8 +138,19 @@ class Data_Handler:
         else:
             if found_link:
                 song["Status"] = "Link Found"
-                file_name = os.path.join(self.string_cleaner(folder), self.string_cleaner(title) + " - " + self.string_cleaner(artist))
-                full_file_path = os.path.join(self.download_folder, file_name)
+                artist_folder = self.string_cleaner(artist)  # Clean and prepare artist name for folder creation
+                album_folder = self.string_cleaner(album)  # Clean and prepare album/playlist name for folder creation
+                track_file_name = self.string_cleaner(title)  # Prepare track title for file naming
+
+                # Construct the full path including artist and album directories
+                full_folder_path = os.path.join(self.download_folder, artist_folder, album_folder)
+
+                # Check if the full folder path exists, if not, create it
+                if not os.path.exists(full_folder_path):
+                    os.makedirs(full_folder_path)
+
+                # Update full_file_path to include the new folder structure and file name
+                full_file_path = os.path.join(full_folder_path, track_file_name)
 
                 if not os.path.exists(full_file_path + ".mp3"):
                     try:
