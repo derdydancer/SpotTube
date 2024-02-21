@@ -11,7 +11,7 @@ Web GUI for downloading Spotify Playlists/Albums.
 
 ## This is a fork
 This fork differs in that it creates a folder structure to comply with jellyfin. Just add the playlist folder to your music library on jellyfin
-
+```
 Playlist
 ├── Artist 1
 │   ├── Album A
@@ -25,7 +25,7 @@ Playlist
 └── Artist 2
     └── Album A
         └── Song 1.flac
-
+```
 
 https://jellyfin.org/docs/general/server/media/music/
 ---
